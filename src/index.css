@@ -1,0 +1,31 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@layer base {
+  :root {
+    --radius: 0.5rem;
+    --primary: rgba(17,25,40,0.75)
+  }
+}
+
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande","Lucida Sans Unicode", Geneva, Verdana, sans-serif;
+}
+
+body{
+  background-image: url("../public/bg.jpg"); 
+}
+
+
+@layer components {
+  .message {
+     @apply max-w-[70%] flex gap-4
+  }
+
+  .own{
+    @apply self-end
+  }
+}
