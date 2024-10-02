@@ -7,7 +7,7 @@ const MiddleSection = () => {
     endRef.current?.scrollIntoView({ behavior: "smooth" });
   }, []);
   return (
-    <div className="Middle p-5 flex-1 overflow-scroll flex flex-col gap-5 ">
+    <div className="Middle p-5 flex-1 overflow-y-scroll flex flex-col gap-5 ">
       <div className="message">
         <img
           src="./avatar.png"
