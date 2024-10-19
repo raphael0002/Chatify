@@ -3,13 +3,16 @@ import { useEffect, useState } from "react";
 import ChatListItems from "./ChatListItems/ChatListItems";
 import AddUser from "../../addUser/AddUser";
 import { useUserStore } from "@/lib/firebase/userStore";
-import { doc, getDoc, onSnapshot } from "firebase/firestore";
+import { doc, getDoc, onSnapshot, updateDoc } from "firebase/firestore";
 import { database } from "@/lib/firebase/firebase";
+import { useChatStore } from "@/lib/firebase/chatStore";
 
 const ChatList = () => {
   const [addMode, setAddmode] = useState(false);
   const { currentUser } = useUserStore();
   const [chatList, setChatList] = useState([]);
+  const { changeChat } = useChatStore();
+  const [input, setInput] = useState("");
 
   useEffect(() => {
     const unSub = onSnapshot(
@@ -41,6 +44,33 @@ const ChatList = () => {
     };
   }, [currentUser.id]);
 
+  const handleSelect = async (currentChat) => {
+    const userChats = chatList.map((item) => {
+      const { user, ...rest } = item;
+      return rest;
+    });
+
+    const chatIndex = userChats.findIndex(
+      (item) => item.chatId === currentChat.chatId
+    );
+
+    userChats[chatIndex].isSeen = true;
+
+    const userChatsRef = doc(database, "userchats", currentUser.id);
+    try {
+      await updateDoc(userChatsRef, {
+        chats: userChats,
+      });
+      changeChat(currentChat.chatId, currentChat.user);
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  // const filteredChats = chatList.filter((c) =>
+  //   c.user.username.toLowerCase().includes(input.toLowerCase())
+  // );
+
   return (
     <div className="flex-1 overflow-scroll scroll-smooth">
       <div className="flex items-center gap-5 p-5">
@@ -50,6 +80,7 @@ const ChatList = () => {
             type="text"
             placeholder="Search"
             className="flex-1 bg-transparent border-none outline-none text-white"
+            onChange={(e) => setInput(e.target.value)}
           />
         </div>
         <div onClick={() => setAddmode(!addMode)}>
@@ -68,7 +99,9 @@ const ChatList = () => {
       </div>
       <div className={`itemsList`}>
         {chatList &&
-          chatList.map((chat, i) => <ChatListItems key={i} chat={chat} />)}
+          chatList.map((chat, i) => (
+            <ChatListItems key={i} chat={chat} handleSelect={handleSelect} />
+          ))}
       </div>
       {addMode && <AddUser />}
     </div>

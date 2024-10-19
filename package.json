@@ -23,6 +23,7 @@
     "react-toastify": "^10.0.5",
     "tailwind-merge": "^2.5.2",
     "tailwindcss-animate": "^1.0.7",
+    "timeago.js": "^4.0.2",
     "zustand": "^5.0.0-rc.2"
   },
   "devDependencies": {

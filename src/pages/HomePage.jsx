@@ -8,8 +8,10 @@ import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "@/lib/firebase/firebase";
 import { useUserStore } from "@/lib/firebase/userStore";
 import { PacmanLoader } from "react-spinners";
+import { useChatStore } from "@/lib/firebase/chatStore";
 
 const HomePage = () => {
+  const { chatId } = useChatStore();
   const { currentUser, isLoading, fetchUserInfo } = useUserStore();
 
   useEffect(() => {
@@ -28,8 +30,8 @@ const HomePage = () => {
       {currentUser ? (
         <>
           <List />
-          <Chat />
-          <Detail />
+          {chatId && <Chat />}
+          {chatId && <Detail />}
         </>
       ) : (
         <Login />
